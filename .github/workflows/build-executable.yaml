@@ -1,0 +1,59 @@
+name: Build Python App with Nuitka
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install nuitka zstandard
+
+      - name: Build executable with Nuitka
+        run: |
+          nuitka \
+            --onefile \
+            --standalone \
+            --follow-imports \
+            --output-dir=build \
+            --output-filename=dnsmasq-config-api \
+            ./src/app.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-app-binary
+          path: dist/dnsmasq-config-api
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: python-app-binary
+          path: dist/dnsmasq-config-api
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/dnsmasq-config-api
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

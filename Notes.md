@@ -39,3 +39,10 @@ sudo cp deploy/dnsmasq-config-api.service /etc/systemd/system/
 sudo systemctl enable --now dnsmasq-config-api.service
 
 ```
+
+<br>
+__Trigger GH Action Pipeline__
+```
+git tag v0.0.1
+git push origin v0.0.1
+```
