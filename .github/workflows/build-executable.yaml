@@ -49,7 +49,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: python-app-binary
-          path: dist/dnsmasq-config-api
+          path: build/dnsmasq-config-api
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
