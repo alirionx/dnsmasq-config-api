@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: python-app-binary
-          path: dist/dnsmasq-config-api
+          path: build/
 
   release:
     needs: build
@@ -54,6 +54,6 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/dnsmasq-config-api
+          files: build/dnsmasq-config-api
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
