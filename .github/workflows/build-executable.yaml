@@ -2,6 +2,8 @@ name: Build Python App with Nuitka
 
 on:
   push:
+    branches:
+      - "main"
     tags:
       - "v*"
 
@@ -18,27 +20,28 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install nuitka zstandard
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
+      #     pip install nuitka zstandard
 
       - name: Build executable with Nuitka
-        run: |
-          nuitka \
-            --onefile \
-            --standalone \
-            --follow-imports \
-            --output-dir=build \
-            --output-filename=dnsmasq-config-api \
-            ./src/app.py
+        # run: |
+        #   nuitka \
+        #     --onefile \
+        #     --standalone \
+        #     --follow-imports \
+        #     --output-dir=./build \
+        #     --output-filename=dnsmasq-config-api \
+        #     ./src/app.py
+        run: ehco "test" > ./build/dnsmasq-config-api
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: python-app-binary
-          path: build/dnsmasq-config-api
+          path: ./build/dnsmasq-config-api
 
   release:
     needs: build
@@ -49,14 +52,17 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: python-app-binary
-          path: build/dnsmasq-config-api
+          path: ./downloads
       
-      # - name: Extract artifact
-      #   run: unzip build/dnsmasq-config-api.zip -d build/
+      - name: list downloaded files
+        run: ls -lah ./downloads
+
+          # - name: Extract artifact
+      #   run: unzip ./downloads/dnsmasq-config-api.zip -d downloads/
       
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: build/*
+          files: ./downloads/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
