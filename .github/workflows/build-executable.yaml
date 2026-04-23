@@ -2,8 +2,6 @@ name: Build Python App with Nuitka
 
 on:
   push:
-    branches:
-      - "main"
     tags:
       - "v*"
 
@@ -20,24 +18,26 @@ jobs:
         with:
           python-version: "3.13"
 
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install -r requirements.txt
-      #     pip install nuitka zstandard
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install nuitka zstandard
 
       - name: Build executable with Nuitka
-        # run: |
-        #   nuitka \
-        #     --onefile \
-        #     --standalone \
-        #     --follow-imports \
-        #     --output-dir=./build \
-        #     --output-filename=dnsmasq-config-api \
-        #     ./src/app.py
         run: |
-          mkdir ./build
-          echo "test" > ./build/dnsmasq-config-api
+          nuitka \
+            --onefile \
+            --standalone \
+            --follow-imports \
+            --output-dir=./build \
+            --output-filename=dnsmasq-config-api \
+            ./src/app.py
+        
+        # For testing porpose
+        # run: |
+        #   mkdir ./build
+        #   echo "test" > ./build/dnsmasq-config-api
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
@@ -58,9 +58,6 @@ jobs:
       
       - name: list downloaded files
         run: ls -lah ./downloads
-
-          # - name: Extract artifact
-      #   run: unzip ./downloads/dnsmasq-config-api.zip -d downloads/
       
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
