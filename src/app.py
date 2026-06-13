@@ -1,3 +1,4 @@
+import os
 import uuid
 from fastapi import FastAPI, HTTPException, Request, Body
 from fastapi.middleware.cors import CORSMiddleware
@@ -144,9 +145,9 @@ async def api_systemd_post(action:Literal["enable", "disable", "start", "stop", 
 #------
 
 #----------------------------------------------
-
-
-
+if not os.path.isdir(settings.static_html_folder):
+    os.makedirs(settings.static_html_folder)
+app.mount("/", StaticFiles(directory=settings.static_html_folder, html=True), name="spa")
 
 
 #-The Runner----------------------------------------------

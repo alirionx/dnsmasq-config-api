@@ -13,12 +13,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Set up NodeJS
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      
+      - name: Install nodejs dependencies
+        run: |
+          cd spa
+          npm install
+          npm run build
+          cp -R dist/* ../src/static
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
-      - name: Install dependencies
+      - name: Install python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
