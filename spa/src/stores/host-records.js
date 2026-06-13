@@ -105,6 +105,11 @@ export const useHostRecordsStore = defineStore('hostRecords', {
     systemdAction(action){
       axios.post(`/api/dns/systemd?action=${action}`)
       .then(response => {
+        this.systemMessage = {
+          isActive: true,
+          type: "information",
+          message: `systemdAction: DNSMasq service ${action}ed`
+        }
       })
       .catch(error => {
         this.systemMessage = {

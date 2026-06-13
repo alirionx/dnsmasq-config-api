@@ -53,12 +53,21 @@
           </table>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 d-flex align-items-center gap-3">
+          <select class="form-select-sm w-auto" style="min-width: 160px;" v-model="systemdAction">
+            <option value="enable">enable</option>
+            <option value="disable">disable</option>
+            <option value="start">start</option>
+            <option value="stop">stop</option>
+            <option value="reload">reload</option>
+            <option value="restart">restart</option>
+          </select>
           <button 
             class="btn btn-sm btn-primary"   
+            style="min-width: 160px;"
             type="button"      
-            @click="hostRecordsStore.systemdAction('restart')"
-          >Restart DNSMasq</button>
+            @click="hostRecordsStore.systemdAction(systemdAction)"
+          >{{systemdAction}} - DNSMasq</button>
         </div>
 
       </div>
@@ -102,7 +111,8 @@ export default {
         }
       ],
       activeAddEdit: null,
-      idxAddEdit: null
+      idxAddEdit: null,
+      systemdAction: "restart"
     }
   },
 
