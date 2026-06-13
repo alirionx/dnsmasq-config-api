@@ -94,10 +94,6 @@ export default {
       hostRecordsStore: useHostRecordsStore(),
       columns: [
         {
-          key: "id",
-          name: "Id"
-        },
-        {
           key: "hostnames",
           name: "Hostnames"
         },
@@ -108,6 +104,10 @@ export default {
         {
           key: "ipv6_address",
           name: "IPv6 Address"
+        },
+        {
+          key: "id",
+          name: "Id"
         }
       ],
       activeAddEdit: null,

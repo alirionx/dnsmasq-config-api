@@ -22,10 +22,18 @@ export const useHostRecordsStore = defineStore('hostRecords', {
       }
     },
 
+    sortRecords(){
+      this.records.sort((a, b) => a.ipv4_address.localeCompare(b.ipv4_address));
+      this.records.forEach((record, idx) => {
+          record.hostnames.sort((a, b) => a.localeCompare(b));
+      });
+    },
+
     fetchHostRecords() {
       axios.get('/api/dns/host-records')
       .then(response => {
         this.records = Array.isArray(response.data) ? response.data : []
+        this.sortRecords()
       })
       .catch(error => {
         this.systemMessage = {
@@ -54,6 +62,7 @@ export const useHostRecordsStore = defineStore('hostRecords', {
       })
       .finally(() => {
         console.log('addHostRecord executed');
+        this.sortRecords()
       });
     },
 
@@ -71,6 +80,7 @@ export const useHostRecordsStore = defineStore('hostRecords', {
         }
       })
       .finally(() => {
+        this.sortRecords()
         console.log('updateHostRecord executed');
       });
     },
