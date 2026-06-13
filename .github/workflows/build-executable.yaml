@@ -23,6 +23,7 @@ jobs:
           cd spa
           npm install
           npm run build
+          mkdir -p ../src/static
           cp -R dist/* ../src/static
 
       - name: Set up Python
