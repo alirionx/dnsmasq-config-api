@@ -1,4 +1,5 @@
 import os
+import sys
 import uuid
 from fastapi import FastAPI, HTTPException, Request, Body
 from fastapi.middleware.cors import CORSMiddleware
@@ -145,9 +146,22 @@ async def api_systemd_post(action:Literal["enable", "disable", "start", "stop", 
 #------
 
 #----------------------------------------------
-if not os.path.isdir(settings.static_html_folder):
-    os.makedirs(settings.static_html_folder)
-app.mount("/", StaticFiles(directory=settings.static_html_folder, html=True), name="spa")
+def get_static_dir():
+    # Nuitka Onefile
+    if getattr(sys, "frozen", False) and "NUITKA_ONEFILE_PARENT" in os.environ:
+        tempdir = os.environ.get("NUITKA_ONEFILE_TEMP")
+        return os.path.join(tempdir, "static")
+
+    # Dev-Modus
+    return os.path.join(os.path.dirname(__file__), "static")
+
+static_html_folder = get_static_dir()
+
+if not os.path.isdir(static_html_folder):
+    os.makedirs(static_html_folder)
+
+#------
+app.mount("/", StaticFiles(directory=static_html_folder, html=True), name="spa")
 
 
 #-The Runner----------------------------------------------

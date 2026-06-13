@@ -42,6 +42,7 @@ jobs:
           nuitka \
             --onefile \
             --standalone \
+            --include-data-dir=./src/static=static \
             --follow-imports \
             --output-dir=./build \
             --output-filename=dnsmasq-config-api \
